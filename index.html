@@ -16,6 +16,214 @@
       --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
     
+    /* 深海エフェクト用の変数 */
+    html {
+      --ocean-surface: #f0f8ff;
+      --ocean-shallow: #e0f0ff;
+      --ocean-middle: #c0e0ff;
+      --ocean-deep: #a0c0e0;
+      --ocean-abyss: #6080a0;
+      --ocean-bottom: #304050;
+      scroll-behavior: smooth;
+    }
+    
+    /* タイトルアニメーション用のスタイル */
+    .title-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    .title-animation.fade-out {
+      opacity: 0;
+    }
+    
+    .dynamic-title {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #000;
+      text-align: center;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    
+    .dynamic-title.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    .dynamic-title span {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px) rotate(10deg);
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    
+    /* ローディングアニメーション用のスタイル */
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    .loading-container.fade-out {
+      opacity: 0;
+    }
+    
+    .loading-logo {
+      width: 200px;
+      height: 200px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .loading-circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid transparent;
+      border-top-color: #000;
+      animation: spin 1.5s linear infinite;
+    }
+    
+    .loading-circle:nth-child(2) {
+      border-top-color: transparent;
+      border-right-color: #000;
+      animation-delay: 0.5s;
+    }
+    
+    .loading-circle:nth-child(3) {
+      border-top-color: transparent;
+      border-bottom-color: #000;
+      animation-delay: 1s;
+    }
+    
+    .loading-text {
+      color: #000;
+      font-size: 24px;
+      letter-spacing: 3px;
+      margin-top: 20px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      opacity: 0;
+      animation: fadeInOut 2s ease-in-out infinite;
+    }
+    
+    .loading-fish {
+      position: absolute;
+      width: 60px;
+      height: 30px;
+      background-color: #000;
+      border-radius: 50%;
+      transform: rotate(45deg);
+      animation: swim 3s ease-in-out infinite;
+    }
+    
+    .loading-fish:before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: #000;
+    }
+    
+    .loading-fish:after {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 10px;
+      width: 0;
+      height: 0;
+      border-top: 15px solid transparent;
+      border-right: 25px solid #000;
+      border-bottom: 15px solid transparent;
+    }
+    
+    .main-content {
+      opacity: 0;
+      transition: opacity 1s ease-in;
+    }
+    
+    .main-content.visible {
+      opacity: 1;
+    }
+    
+    /* スクロールアニメーション用 */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* スクロール検出用 */
+    .fade-in-element {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .fade-in-element.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    
+    @keyframes swim {
+      0%, 100% { transform: translateX(-50px) rotate(45deg); }
+      50% { transform: translateX(50px) rotate(45deg); }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-20px) translateX(10px); }
+    }
+    
+    @keyframes bubble {
+      0% { 
+        transform: translateY(100vh) scale(0);
+        opacity: 0.7;
+      }
+      100% { 
+        transform: translateY(-20vh) scale(1);
+        opacity: 0;
+      }
+    }
+    
     * {
       margin: 0;
       padding: 0;
@@ -24,9 +232,45 @@
     }
     
     body {
-      background-color: var(--light);
+      background-color: var(--ocean-surface);
       color: var(--dark);
       line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color 0.5s ease;
+    }
+    
+    /* 深海エフェクト用のオーバーレイ */
+    .ocean-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 0%, rgba(0,0,20,0.1) 100%);
+      mix-blend-mode: multiply;
+      z-index: 1000;
+    }
+    
+    /* 深海の光の粒子エフェクト */
+    .ocean-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    
+    .ocean-particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float 3s infinite ease-in-out;
     }
     
     header {
@@ -66,6 +310,14 @@
       overflow: hidden;
       box-shadow: var(--shadow);
       border: 1px solid var(--accent);
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .category.visible {
+      opacity: 1;
+      transform: translateX(0);
     }
     
     .category-header {
@@ -100,8 +352,15 @@
       border-radius: 8px;
       padding: 1.5rem;
       box-shadow: var(--shadow);
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, opacity 0.4s ease;
       border: 1px solid var(--accent);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    .song.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
     
     .song:hover {
@@ -123,6 +382,17 @@
     }
     
     .song-title a:hover {
+      color: #555;
+      text-decoration: underline;
+    }
+    
+    .song-desc a {
+      color: #000;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    .song-desc a:hover {
       color: #555;
       text-decoration: underline;
     }
@@ -149,9 +419,31 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1>SAKANAQUARIUM 2025 "怪獣" を楽しむためのガイド</h1>
-  </header>
+  <!-- 深海エフェクト用のオーバーレイ -->
+  <div class="ocean-overlay" id="ocean-overlay"></div>
+  <div class="ocean-particles" id="ocean-particles"></div>
+
+  <!-- ローディングアニメーション -->
+  <div class="loading-container" id="loading">
+    <div class="loading-logo">
+      <div class="loading-circle"></div>
+      <div class="loading-circle"></div>
+      <div class="loading-circle"></div>
+      <div class="loading-fish"></div>
+    </div>
+    <div class="loading-text">SAKANAQUARIUM 2025</div>
+  </div>
+
+  <!-- タイトルアニメーション -->
+  <div class="title-animation" id="title-animation" style="display: none;">
+    <h1 class="dynamic-title" id="dynamic-title">SAKANAQUARIUM 2025 "怪獣"</h1>
+  </div>
+
+  <!-- メインコンテンツ -->
+  <div class="main-content" id="content">
+    <header>
+      <h1>SAKANAQUARIUM 2025 "怪獣" を楽しむためのガイド</h1>
+    </header>
   
   <div class="container">
     <!-- GO TO THE FUTURE -->
@@ -201,11 +493,11 @@
         </div>
         <div class="song">
           <h3 class="song-title">アイデンティティ</h3>
-          <p class="song-desc">みんなアイデンティティ足りてる？？</p>
+          <p class="song-desc">どうして？という魂の叫びが最高な１曲。</p>
         </div>
         <div class="song">
           <h3 class="song-title">多分、風。</h3>
-          <p class="song-desc">畔走らせたあの子は多分、風。</p>
+          <p class="song-desc">「僕がこの歌で表現したかったのは、仮想の景色なんですよ。（中略）実際には経験してないけど。みんなが経験したことがあるような感覚というか……そういう景色を音楽にできたらなっていう。あとは日本人にしか理解できない風景ってあるじゃないですか。それって、まさに郷愁だと思うんだけど。そこにこだわることが、当時の歌謡曲で描かれていた風景とすごくマッチするなと思ったし、自分のルーツにあるフォークソングとしての役割みたいなもの――演歌もそうなんですけど、そこに辿り着けるかなって。」（山口一郎）</p>
         </div>
         <div class="song">
           <h3 class="song-title">アルクアラウンド</h3>
@@ -393,7 +685,7 @@
                 </div>
                 <div class="song">
                   <h3 class="song-title">プラトー</h3>
-                  <p class="song-desc">「プラトー」とは一時的に停滞している状態、水平になっている状態を指す。コロナ禍の分断・停滞・閉塞感を切り取ったような楽曲。苦しさと爽快感を両方感じ取ることができる、サカナクションらしい絶妙な一曲。。</p>
+                  <p class="song-desc">「プラトー」とは一時的に停滞している状態、水平になっている状態を指す。コロナ禍の分断・停滞・閉塞感を切り取ったような楽曲。苦しさと爽快感を両方感じ取ることができる、サカナクションらしい絶妙な一曲。</p>
                 </div>
                 <div class="song">
                   <h3 class="song-title">僕と花</h3>
@@ -401,3 +693,231 @@
                 </div>     
                 </div>
                     </section>
+  </div>
+
+  <script>
+    // ページ読み込み完了時に実行
+    window.addEventListener('load', function() {
+      // メインコンテンツを非表示にする
+      const content = document.getElementById('content');
+      const loading = document.getElementById('loading');
+      const titleAnimation = document.getElementById('title-animation');
+      const dynamicTitle = document.getElementById('dynamic-title');
+      
+      // タイトルテキストを文字ごとに分割してspanで囲む
+      const titleText = dynamicTitle.textContent;
+      dynamicTitle.textContent = '';
+      
+      for (let i = 0; i < titleText.length; i++) {
+        const span = document.createElement('span');
+        span.textContent = titleText[i];
+        span.style.transitionDelay = `${i * 0.05}s`;
+        dynamicTitle.appendChild(span);
+      }
+
+      // まずローディングアニメーションを表示
+      setTimeout(function() {
+        loading.classList.add('fade-out');
+        
+        setTimeout(function() {
+          loading.style.display = 'none';
+          
+          // ローディングアニメーション終了後、タイトルアニメーションを開始
+          titleAnimation.style.display = 'flex';
+          setTimeout(function() {
+            dynamicTitle.classList.add('visible');
+            
+            const spans = dynamicTitle.querySelectorAll('span');
+            spans.forEach((span, index) => {
+              setTimeout(() => {
+                span.style.opacity = '1';
+                span.style.transform = 'translateY(0) rotate(0)';
+              }, index * 50);
+            });
+            
+            // タイトルアニメーション後にコンテンツを表示
+            setTimeout(function() {
+              titleAnimation.classList.add('fade-out');
+              
+              setTimeout(function() {
+                titleAnimation.style.display = 'none';
+                content.classList.add('visible');
+                
+                // カテゴリーのアニメーション
+                animateCategories();
+                
+                // 深海エフェクトを初期化
+                initDeepSeaEffect();
+              }, 500);
+            }, 2500);
+          }, 300);
+        }, 500);
+      }, 1200);
+    });
+    
+    // 深海エフェクトの初期化
+    function initDeepSeaEffect() {
+      const body = document.body;
+      const overlay = document.getElementById('ocean-overlay');
+      const particlesContainer = document.getElementById('ocean-particles');
+      
+      // スクロール位置に応じて背景色を変更
+      window.addEventListener('scroll', function() {
+        const scrollPosition = window.scrollY;
+        const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercentage = scrollPosition / documentHeight;
+        
+        // 背景色の変更
+        if (scrollPercentage < 0.2) {
+          body.style.backgroundColor = 'var(--ocean-surface)';
+          body.style.color = '#000000';
+          overlay.style.opacity = '0';
+          particlesContainer.style.opacity = '0';
+        } else if (scrollPercentage < 0.4) {
+          body.style.backgroundColor = 'var(--ocean-shallow)';
+          body.style.color = '#000000';
+          overlay.style.opacity = '0.1';
+          particlesContainer.style.opacity = '0.2';
+        } else if (scrollPercentage < 0.6) {
+          body.style.backgroundColor = 'var(--ocean-middle)';
+          body.style.color = '#000000';
+          overlay.style.opacity = '0.2';
+          particlesContainer.style.opacity = '0.4';
+        } else if (scrollPercentage < 0.8) {
+          body.style.backgroundColor = 'var(--ocean-deep)';
+          body.style.color = '#000000';
+          overlay.style.opacity = '0.3';
+          particlesContainer.style.opacity = '0.6';
+        } else {
+          body.style.backgroundColor = 'var(--ocean-abyss)';
+          body.style.color = '#ffffff';
+          overlay.style.opacity = '0.4';
+          particlesContainer.style.opacity = '0.8';
+        }
+        
+        // 最後のセクションでは最も深い色に
+        const lastSection = document.querySelector('.category:last-child');
+        if (lastSection) {
+          const lastSectionTop = lastSection.getBoundingClientRect().top;
+          if (lastSectionTop < window.innerHeight / 2) {
+            body.style.backgroundColor = 'var(--ocean-bottom)';
+            body.style.color = '#ffffff';
+            overlay.style.opacity = '0.5';
+            particlesContainer.style.opacity = '1';
+          }
+        }
+      });
+      
+      // 光の粒子を生成
+      createParticles();
+      
+      // 定期的に泡を生成
+      setInterval(createBubble, 2000);
+    }
+    
+    // 光の粒子を生成
+    function createParticles() {
+      const particlesContainer = document.getElementById('ocean-particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('ocean-particle');
+        
+        // ランダムなサイズ、位置、アニメーション遅延
+        const size = Math.random() * 3 + 1;
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const delay = Math.random() * 5;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${left}%`;
+        particle.style.top = `${top}%`;
+        particle.style.animationDelay = `${delay}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    // 泡を生成
+    function createBubble() {
+      const particlesContainer = document.getElementById('ocean-particles');
+      const scrollPercentage = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      
+      // スクロールが一定以上の場合のみ泡を生成
+      if (scrollPercentage > 0.5) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('ocean-particle');
+        
+        // 泡のスタイル
+        const size = Math.random() * 10 + 5;
+        const left = Math.random() * 100;
+        const duration = Math.random() * 5 + 5;
+        
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${left}%`;
+        bubble.style.bottom = '-20px';
+        bubble.style.opacity = '0.3';
+        bubble.style.animation = `bubble ${duration}s linear forwards`;
+        
+        particlesContainer.appendChild(bubble);
+        
+        // アニメーション終了後に要素を削除
+        setTimeout(() => {
+          bubble.remove();
+        }, duration * 1000);
+      }
+    }
+    
+    // カテゴリーを順番にアニメーションさせる関数
+    function animateCategories() {
+      const categories = document.querySelectorAll('.category');
+      
+      categories.forEach((category, index) => {
+        setTimeout(() => {
+          category.classList.add('visible');
+          
+          // カテゴリーが表示された後、その中の曲も順番にアニメーション
+          const songs = category.querySelectorAll('.song');
+          songs.forEach((song, songIndex) => {
+            setTimeout(() => {
+              song.classList.add('visible');
+            }, 100 * songIndex); // 各曲を100msずつ遅延させて表示
+          });
+          
+        }, 200 * index); // 各カテゴリーを200msずつ遅延させて表示
+      });
+    }
+    
+    // スクロール時のアニメーション
+    document.addEventListener('DOMContentLoaded', function() {
+      // スクロール検出用の要素を追加
+      const categoryHeaders = document.querySelectorAll('.category-header');
+      categoryHeaders.forEach(header => {
+        header.classList.add('fade-in-element');
+      });
+      
+      // スクロール検出関数
+      function checkScroll() {
+        const elements = document.querySelectorAll('.fade-in-element');
+        const windowHeight = window.innerHeight;
+        
+        elements.forEach(element => {
+          const elementPosition = element.getBoundingClientRect().top;
+          
+          if (elementPosition < windowHeight - 100) {
+            element.classList.add('visible');
+          }
+        });
+      }
+      
+      // スクロールイベントリスナー
+      window.addEventListener('scroll', checkScroll);
+      // 初期チェック
+      checkScroll();
+    });
+  </script>
+</body>
+</html>
